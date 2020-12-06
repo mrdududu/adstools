@@ -25,7 +25,7 @@
 const textToVal = text => {
   if (!text) return [];
 
-  const val = text.split("\n").filter(t => !!t);
+  const val = text.split("\n"); //.filter(t => !!t);
 
   return val;
 };

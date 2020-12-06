@@ -49,7 +49,7 @@ export default {
       }
     },
     codeInput(newCodeInput) {
-      console.log("codeInput", newCodeInput);
+      // console.log("codeInput", newCodeInput);
       if (newCodeInput != this.code) {
         this.$emit("codeChanged", {
           index: this.index,

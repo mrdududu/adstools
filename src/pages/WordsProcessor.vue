@@ -1,70 +1,65 @@
 <template>
-  <q-page style="display: flex; overflow-x: auto;">
-    <template v-for="(item, index) in core">
-      <ValueCard
-        v-if="item.var"
-        :key="index"
-        :index="index"
-        :name="item.var.name"
-        :val="item.var.val"
-        @valChanged="onValChanged"
-        @nameChanged="onNameChanged"
-        @deleteValue="onDeleteValue"
-      />
-      <template v-else-if="item.code != null">
-        <div class="q-my-lg" :key="'plus_' + index">
-          <q-btn
-            flat
-            round
-            icon="add"
-            @click="
-              () => {
-                insertVar({ index });
-              }
-            "
-          />
-        </div>
-        <CodeCard
+  <q-page style="display: flex; flex-direction: column;">
+    <div class="q-pa-sm">
+      <ToolBar @clickDownloadExcel="downloadExcel()" @clickRun="onClick_Run" />
+    </div>
+    <div style="flex: 1 0 0; display: flex; overflow-x: auto;">
+      <template v-for="(item, index) in core">
+        <ValueCard
+          v-if="item.var"
           :key="index"
           :index="index"
-          :code="item.code"
-          @codeChanged="onCodeChanged"
-          @deleteCode="onDeleteCode"
+          :name="item.var.name"
+          :val="item.var.val"
+          @valChanged="onValChanged"
+          @nameChanged="onNameChanged"
+          @deleteValue="onDeleteValue"
         />
+        <template v-else-if="item.code != null">
+          <div class="q-my-lg" :key="'plus_' + index">
+            <q-btn
+              flat
+              round
+              icon="add"
+              @click="
+                () => {
+                  insertVar({ index });
+                }
+              "
+            />
+          </div>
+          <CodeCard
+            :key="index"
+            :index="index"
+            :code="item.code"
+            @codeChanged="onCodeChanged"
+            @deleteCode="onDeleteCode"
+          />
+        </template>
       </template>
-    </template>
-    <div class="q-my-lg">
-      <q-btn
-        flat
-        round
-        icon="add"
-        @click="
-          () => {
-            insertVar({});
-          }
-        "
-      />
-      <q-btn
-        class="q-mt-sm"
-        flat
-        round
-        icon="wysiwyg"
-        @click="
-          () => {
-            insertCode({});
-          }
-        "
-      />
-    </div>
-    <div class="q-pa-lg">
-      <q-btn flat round icon="play_circle_filled" @click="onClick_Run" />
-      <q-btn
-        class="q-mt-sm"
-        flat
-        round
-        icon="grid_on"
-        @click="downloadExcel()"
-      />
+      <div class="q-pa-lg">
+        <q-btn
+          flat
+          round
+          icon="add"
+          @click="
+            () => {
+              insertVar({});
+            }
+          "
+        />
+        <q-btn
+          class="q-mt-sm"
+          flat
+          round
+          icon="wysiwyg"
+          @click="
+            () => {
+              insertCode({});
+            }
+          "
+        />
+      </div>
     </div>
   </q-page>
 </template>
@@ -76,7 +71,7 @@ const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 //runCode({ v1: 1, v2: 2 }, "return v1+v2;");
 const runCode = (vars, code) => {
-  console.log("runCode", { vars, code });
+  // console.log("runCode", { vars, code });
 
   const varNames = Object.keys(vars);
   const varValues = varNames.map(name => vars[name]);
@@ -100,6 +95,7 @@ const getFilename = () => {
 
 export default {
   components: {
+    ToolBar: () => import("components/Toolbar"),
     ValueCard: () => import("components/ValueCard"),
     CodeCard: () => import("components/CodeCard")
   },
@@ -114,23 +110,23 @@ export default {
   },
   methods: {
     onNameChanged(data) {
-      console.log("onNameChanged data", data);
+      // console.log("onNameChanged data", data);
       this.core[data.index].var.name = data.name;
     },
     onValChanged(data) {
-      console.log("onValChanged data", data);
+      // console.log("onValChanged data", data);
       this.core[data.index].var.val = data.val;
     },
     onCodeChanged(data) {
-      console.log("onValChanged data", data);
+      // console.log("onCodeChanged data", data);
       this.core[data.index].code = data.code;
     },
     onDeleteValue(index) {
-      console.log("onDeleteValue", index);
+      // console.log("onDeleteValue", index);
       this.core.splice(index, 1);
     },
     onDeleteCode(index) {
-      console.log("onDeleteCode", index);
+      // console.log("onDeleteCode", index);
       this.core.splice(index, 1);
     },
     onClick_Run() {
@@ -156,11 +152,11 @@ export default {
       this.saveCore();
     },
     onClick_AddVar(index) {
-      console.log("onClick_AddVar", { index });
+      // console.log("onClick_AddVar", { index });
       this.insertVar({});
     },
     onClick_AddCode() {
-      console.log("onClick_AddCode");
+      // console.log("onClick_AddCode");
       this.insertCode({});
       this.insertVar({});
     },
