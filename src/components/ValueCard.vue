@@ -15,23 +15,19 @@
     ></q-card-section>
     <q-card-section class="flex column" style="flex: 1 0 0;">
       <textarea
-        v-model="text"
+        v-model="valInput"
         style="flex: 1 0 0;  overflow-x: auto;"
       ></textarea>
-      <!-- <q-input dense v-model="text" outlined type="textarea" style="" /> -->
     </q-card-section>
   </q-card>
 </template>
 <script>
 const textToVal = text => {
-  if (!text) return null;
+  if (!text) return [];
 
-  let val = null;
-  val = text.split("\n").filter(t => !!t);
+  const val = text.split("\n").filter(t => !!t);
 
-  if (val.length == 0) return null;
-
-  return val.length > 1 ? val : val[0];
+  return val;
 };
 
 const valToText = val => {
@@ -51,7 +47,7 @@ export default {
   data() {
     return {
       nameInput: "",
-      text: ""
+      valInput: ""
     };
   },
   watch: {
@@ -63,7 +59,7 @@ export default {
         });
       }
     },
-    text(newText) {
+    valInput(newText) {
       const textVal = valToText(this.val);
       if (newText != textVal) {
         this.$emit("valChanged", {
@@ -80,13 +76,13 @@ export default {
     val(newVal) {
       const newValText = valToText(newVal);
       if (newValText != this.text) {
-        this.text = newValText;
+        this.valInput = newValText;
       }
     }
   },
   created() {
     this.nameInput = this.name;
-    this.text = valToText(this.val);
+    this.valInput = valToText(this.val);
   }
 };
 </script>
