@@ -34,48 +34,44 @@
       </template>
     </template>
     <div class="q-my-lg">
-      <div>
-        <q-btn
-          flat
-          round
-          icon="add"
-          @click="
-            () => {
-              insertVar({});
-            }
-          "
-        />
-      </div>
-      <div class="q-mt-sm">
-        <q-btn
-          flat
-          round
-          icon="wysiwyg"
-          @click="
-            () => {
-              insertCode({});
-            }
-          "
-        />
-      </div>
+      <q-btn
+        flat
+        round
+        icon="add"
+        @click="
+          () => {
+            insertVar({});
+          }
+        "
+      />
+      <q-btn
+        class="q-mt-sm"
+        flat
+        round
+        icon="wysiwyg"
+        @click="
+          () => {
+            insertCode({});
+          }
+        "
+      />
     </div>
     <div class="q-pa-lg">
       <q-btn flat round icon="play_circle_filled" @click="onClick_Run" />
-      <!-- <q-btn
-        type="a"
-        :href="excelFile.url"
-        :download="excelFile.filename"
+      <q-btn
+        class="q-mt-sm"
         flat
         round
         icon="grid_on"
         @click="downloadExcel()"
-      /> -->
-      <q-btn flat round icon="grid_on" @click="downloadExcel()" />
+      />
     </div>
   </q-page>
 </template>
 <script>
 import { LocalStorage } from "quasar";
+import ExcelJS from "exceljs/dist/es5/exceljs.browser.js";
+import { saveAs } from "file-saver";
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 //runCode({ v1: 1, v2: 2 }, "return v1+v2;");
@@ -88,6 +84,18 @@ const runCode = (vars, code) => {
   const res = fn(...varValues);
   // console.log("res", res);
   return res;
+};
+
+const getFilename = () => {
+  var today = new Date();
+  var y = today.getFullYear();
+  // JavaScript months are 0-based.
+  var m = today.getMonth() + 1;
+  var d = today.getDate();
+  var h = today.getHours();
+  var mi = today.getMinutes();
+  var s = today.getSeconds();
+  return `${y}${m}${d}${h}${mi}${s}`;
 };
 
 export default {
@@ -178,10 +186,27 @@ export default {
         this.insertVar({ val: null });
       }
     },
-    downloadExcel() {
+    async downloadExcel() {
+      const sheetArray = this.getSheetArray();
+      const wb = new ExcelJS.Workbook();
+
+      const ws = wb.addWorksheet();
+
+      sheetArray.forEach(sheetRow => {
+        const row = ws.addRow(sheetRow);
+        row.font = { bold: true };
+      });
+
+      const buf = await wb.xlsx.writeBuffer();
+
+      saveAs(new Blob([buf]), `${getFilename()}.xlsx`);
+    },
+    getSheetArray() {
       let maxRow = 0;
-      const jsonData = [];
+      const sheetArray = [];
+      const namesRow = [];
       const varsData = this.core.filter(item => item.var);
+
       varsData.forEach(varData => {
         let len = 1;
         if (Array.isArray(varData.var.val)) {
@@ -189,12 +214,14 @@ export default {
         }
 
         if (maxRow < len) maxRow = len;
+
+        namesRow.push(varData.var.name);
       });
-      // console.log("varsData", varsData);
-      console.log("maxRow", maxRow);
+
+      sheetArray.push(namesRow);
 
       for (let i = 0; i < maxRow; i++) {
-        const row = {};
+        const row = [];
         varsData.forEach(varData => {
           let val = "";
           if (!Array.isArray(varData.var.val)) {
@@ -203,17 +230,13 @@ export default {
             val = i < varData.var.val.length ? varData.var.val[i] : "";
           }
 
-          row[varData.var.name] = val;
+          row.push(val);
         });
 
-        jsonData.push(row);
+        sheetArray.push(row);
       }
 
-      console.log("jsonData", jsonData);
-
-      // const jsonData = encodeURIComponent('{"is_valid": true}');
-      // this.excelFile.url = `data:text/plain;charset=utf-8,${jsonData}`;
-      // this.excelFile.filename = "example.json";
+      return sheetArray;
     }
   },
   created() {
