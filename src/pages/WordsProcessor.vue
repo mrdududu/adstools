@@ -145,7 +145,11 @@ export default {
           // console.log("vars", vars);
           // console.log("el.code", el.code);
           const res = runCode(vars, el.code);
-          this.core[i + 1].var.val = res;
+
+          const resNames = Object.keys(res);
+          resNames.forEach(name => {
+            this.setValByName(name, res[name]);
+          });
         }
       }
 
@@ -237,6 +241,21 @@ export default {
       }
 
       return sheetArray;
+    },
+    setValByName(name, newVal) {
+      const elVar = this.core.find(el => {
+        if (el.var) {
+          if (el.var.name == name) {
+            return true;
+          }
+        }
+
+        return false;
+      });
+
+      if (elVar) {
+        elVar.var.val = newVal;
+      }
     }
   },
   created() {
