@@ -2,10 +2,13 @@
   <q-page style="display: flex; flex-direction: column;">
     <div class="q-pa-sm q-pt-md">
       <ToolBar
+        :savesList="savesList"
+        :selectedSaveId="loadedSaveId"
         @clickDownloadExcel="downloadExcel()"
         @clickRun="onClick_Run"
         @clickSave="onClick_Save"
         @clickSaveAs="onClick_SaveAs"
+        @clickLoadSave="onClick_LoadSave"
       />
     </div>
     <div style="flex: 1 0 0; display: flex; overflow-x: auto;">
@@ -66,31 +69,22 @@
         />
       </div>
     </div>
-    <PromptDialog ref="dialogSaveAs" @clickBtnOk="onOk_SaveAs" />
-    <!-- <q-dialog v-model="dialogSaveAs" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">Recipe name</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-input dense autofocus />
-        </q-card-section>
-
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup />
-          <q-btn flat label="Save" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog> -->
+    <PromptDialog
+      ref="dialogSaveAs"
+      title="Save As"
+      label-btn-ok="Save"
+      @clickBtnOk="onOk_SaveAs"
+    />
   </q-page>
 </template>
 <script>
 import { LocalStorage } from "quasar";
 import ExcelJS from "exceljs/dist/es5/exceljs.browser.js";
 import { saveAs } from "file-saver";
+import SaveDataClass from "../misc/SaveData";
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
+const wpSaves = new SaveDataClass("wp_saves");
 //runCode({ v1: 1, v2: 2 }, "return v1+v2;");
 const runCode = (vars, code) => {
   // console.log("runCode", { vars, code });
@@ -124,7 +118,9 @@ export default {
   },
   data() {
     return {
-      core: []
+      core: [],
+      loadedSaveId: null,
+      savesList: wpSaves.getList()
     };
   },
   methods: {
@@ -188,6 +184,14 @@ export default {
     },
     onOk_SaveAs(prompt) {
       console.log("onClick_SaveAs", { prompt });
+      wpSaves.save({ title: prompt, data: this.core });
+    },
+    onClick_LoadSave(id) {
+      console.log("onClick_LoadSave", { id });
+      const saveData = wpSaves.getData(id);
+      // console.log({ saveData });
+      this.loadedSaveId = id;
+      this.core = saveData;
     },
     insertVar({ index, val }) {
       index = index === undefined || index === null ? this.core.length : index;

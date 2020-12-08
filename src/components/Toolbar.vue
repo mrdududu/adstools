@@ -8,10 +8,16 @@
         </q-item>
       </q-list>
     </q-btn-dropdown>
-    <q-btn-dropdown flat label="Load recipe">
+    <q-btn-dropdown flat :label="selectedSave ? selectedSave.title : 'Load'">
       <q-list>
-        <q-item clickable v-close-popup @click="$emit('clickLoad')">
-          <q-item-section>Name some recipe</q-item-section>
+        <q-item
+          v-for="item in ddSavesList"
+          :key="item.id"
+          clickable
+          v-close-popup
+          @click="clickLoadSave(item.id, $event)"
+        >
+          <q-item-section>{{ item.title }}</q-item-section>
         </q-item>
       </q-list>
     </q-btn-dropdown>
@@ -35,3 +41,22 @@
     />
   </q-toolbar>
 </template>
+<script>
+export default {
+  props: ["savesList", "selectedSaveId"],
+  computed: {
+    ddSavesList() {
+      return this.savesList.filter(item => item.id != this.selectedSaveId);
+    },
+    selectedSave() {
+      return this.savesList.find(item => item.id == this.selectedSaveId);
+    }
+  },
+  methods: {
+    clickLoadSave(id) {
+      // console.log("clickLoadSave", { id });
+      this.$emit("clickLoadSave", id);
+    }
+  }
+};
+</script>
