@@ -1,7 +1,12 @@
 <template>
   <q-page style="display: flex; flex-direction: column;">
-    <div class="q-pa-sm">
-      <ToolBar @clickDownloadExcel="downloadExcel()" @clickRun="onClick_Run" />
+    <div class="q-pa-sm q-pt-md">
+      <ToolBar
+        @clickDownloadExcel="downloadExcel()"
+        @clickRun="onClick_Run"
+        @clickSave="onClick_Save"
+        @clickSaveAs="onClick_SaveAs"
+      />
     </div>
     <div style="flex: 1 0 0; display: flex; overflow-x: auto;">
       <template v-for="(item, index) in core">
@@ -61,6 +66,23 @@
         />
       </div>
     </div>
+    <PromptDialog ref="dialogSaveAs" @clickBtnOk="onOk_SaveAs" />
+    <!-- <q-dialog v-model="dialogSaveAs" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">Recipe name</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-input dense autofocus />
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Cancel" v-close-popup />
+          <q-btn flat label="Save" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog> -->
   </q-page>
 </template>
 <script>
@@ -97,15 +119,12 @@ export default {
   components: {
     ToolBar: () => import("components/Toolbar"),
     ValueCard: () => import("components/ValueCard"),
-    CodeCard: () => import("components/CodeCard")
+    CodeCard: () => import("components/CodeCard"),
+    PromptDialog: () => import("components/PromptDialog")
   },
   data() {
     return {
-      core: [],
-      excelFile: {
-        url: "",
-        filename: ""
-      }
+      core: []
     };
   },
   methods: {
@@ -159,6 +178,16 @@ export default {
       // console.log("onClick_AddCode");
       this.insertCode({});
       this.insertVar({});
+    },
+    onClick_Save() {
+      console.log("onClick_Save");
+    },
+    onClick_SaveAs() {
+      console.log("onClick_SaveAs");
+      this.$refs.dialogSaveAs.show();
+    },
+    onOk_SaveAs(prompt) {
+      console.log("onClick_SaveAs", { prompt });
     },
     insertVar({ index, val }) {
       index = index === undefined || index === null ? this.core.length : index;

@@ -1,7 +1,20 @@
 <template>
   <q-toolbar class="bg-grey-3 shadow-2 rounded-borders">
-    <q-btn stretch flat label="New" />
-    <q-btn stretch flat label="Save" />
+    <q-btn flat label="New" @click="$emit('clickNew')" />
+    <q-btn-dropdown split flat label="Save" @click="$emit('clickSave')">
+      <q-list>
+        <q-item clickable v-close-popup @click="$emit('clickSaveAs')">
+          <q-item-section>Save as</q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
+    <q-btn-dropdown flat label="Load recipe">
+      <q-list>
+        <q-item clickable v-close-popup @click="$emit('clickLoad')">
+          <q-item-section>Name some recipe</q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
     <q-space />
     <q-btn
       flat
