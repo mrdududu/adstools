@@ -1,5 +1,9 @@
 <template>
   <q-toolbar class="bg-grey-3 shadow-2 rounded-borders">
+    <q-toolbar-title shrink>
+      Ads Tool
+    </q-toolbar-title>
+    <q-separator vertical inset />
     <q-btn flat label="New" @click="$emit('clickNew')" />
     <q-btn-dropdown split flat label="Save" @click="$emit('clickSave')">
       <q-list>

@@ -6,6 +6,7 @@
         :selectedSaveId="loadedSaveId"
         @clickDownloadExcel="downloadExcel()"
         @clickRun="onClick_Run"
+        @clickNew="onClick_New"
         @clickSave="onClick_Save"
         @clickSaveAs="onClick_SaveAs"
         @clickLoadSave="onClick_LoadSave"
@@ -164,7 +165,7 @@ export default {
         }
       }
 
-      this.saveCore();
+      this.saveState();
     },
     onClick_AddVar(index) {
       // console.log("onClick_AddVar", { index });
@@ -175,8 +176,22 @@ export default {
       this.insertCode({});
       this.insertVar({});
     },
+    onClick_New() {
+      console.log("onClick_New");
+      this.loadedSaveId = null;
+      this.core = [];
+      this.insertVar({ val: null });
+      this.insertCode({ code: "return {b: a}" });
+      this.insertVar({ val: null });
+    },
     onClick_Save() {
+      //resumeState
       console.log("onClick_Save");
+      if (this.loadedSaveId) {
+        wpSaves.save({ id: this.loadedSaveId, data: this.core });
+      } else {
+        this.$refs.dialogSaveAs.show();
+      }
     },
     onClick_SaveAs() {
       console.log("onClick_SaveAs");
@@ -184,7 +199,9 @@ export default {
     },
     onOk_SaveAs(prompt) {
       console.log("onClick_SaveAs", { prompt });
-      wpSaves.save({ title: prompt, data: this.core });
+      const id = wpSaves.save({ title: prompt, data: this.core });
+      this.savesList = wpSaves.getList();
+      this.loadedSaveId = id;
     },
     onClick_LoadSave(id) {
       console.log("onClick_LoadSave", { id });
@@ -205,18 +222,20 @@ export default {
       code = code ? code : "";
       this.core.splice(index, 0, { code });
     },
-    saveCore() {
-      LocalStorage.set("core", this.core);
+    saveState() {
+      LocalStorage.set("state", {
+        core: this.core,
+        loadedSaveId: this.loadedSaveId
+      });
     },
-    loadCore() {
-      const core = LocalStorage.getItem("core");
-      if (core) {
-        this.core = core;
+    resumeState() {
+      const state = LocalStorage.getItem("state");
+      this.savesList = wpSaves.getList();
+      if (state) {
+        this.core = state.core;
+        this.loadedSaveId = state.loadedSaveId;
       } else {
-        this.insertVar({ val: "a" });
-        this.insertVar({ val: "b" });
-        this.insertCode({ code: "return a + b;" });
-        this.insertVar({ val: null });
+        this.onClick_New();
       }
     },
     async downloadExcel() {
@@ -288,7 +307,7 @@ export default {
     }
   },
   created() {
-    this.loadCore();
+    this.resumeState();
   }
 };
 </script>

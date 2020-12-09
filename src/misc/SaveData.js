@@ -42,8 +42,9 @@ class SaveData {
         if (title) elById.title = title;
       }
     } else {
+      id = Date.now();
       const newEl = {
-        id: Date.now(),
+        id,
         title,
         data
       };
@@ -51,6 +52,8 @@ class SaveData {
     }
 
     LocalStorage.set(this.storageName, storage);
+
+    return id;
   }
 }
 
