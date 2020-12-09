@@ -189,6 +189,7 @@ export default {
       console.log("onClick_Save");
       if (this.loadedSaveId) {
         wpSaves.save({ id: this.loadedSaveId, data: this.core });
+        this.savesList = wpSaves.getList();
       } else {
         this.$refs.dialogSaveAs.show();
       }

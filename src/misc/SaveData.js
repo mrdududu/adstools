@@ -34,18 +34,27 @@ class SaveData {
   }
   save({ id, title, data }) {
     const storage = this.storage ? this.storage : [];
-    if (id) {
-      const elById = storage.find(item => item.id === id);
-      if (elById) {
-        elById.dateUpdate = Date.now();
-        elById.data = data;
-        if (title) elById.title = title;
+    let isNew = true;
+    let elById = null;
+
+    if (0 < storage.length) {
+      if (id) {
+        elById = storage.find(item => item.id === id);
+        if (elById) {
+          isNew = false;
+        }
       }
+    }
+
+    if (!isNew) {
+      elById.dateUpdate = Date.now();
+      elById.data = data;
+      if (title) elById.title = title;
     } else {
-      id = Date.now();
+      id = id ? id : Date.now();
       const newEl = {
         id,
-        title,
+        title: title ? title : id,
         data
       };
       storage.push(newEl);

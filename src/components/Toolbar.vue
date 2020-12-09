@@ -12,7 +12,11 @@
         </q-item>
       </q-list>
     </q-btn-dropdown>
-    <q-btn-dropdown flat :label="selectedSave ? selectedSave.title : 'Load'">
+    <q-btn-dropdown
+      v-if="0 < savesList.length"
+      flat
+      :label="selectedSave ? selectedSave.title : 'Load'"
+    >
       <q-list>
         <q-item
           v-for="item in ddSavesList"

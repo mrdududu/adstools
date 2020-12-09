@@ -1,21 +1,21 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <!-- <q-header elevated>
       <q-toolbar>
-        <!-- <q-btn
+        <q-btn
           flat
           dense
           round
           icon="menu"
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
-        /> -->
+        />
 
         <q-toolbar-title>
           Ads Tools
         </q-toolbar-title>
       </q-toolbar>
-    </q-header>
+    </q-header> -->
 
     <!-- <q-drawer
       v-model="leftDrawerOpen"
