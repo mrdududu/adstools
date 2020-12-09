@@ -9,6 +9,7 @@
         @clickNew="onClick_New"
         @clickSave="onClick_Save"
         @clickSaveAs="onClick_SaveAs"
+        @clickSaveAsJson="onClick_SaveAsJson"
         @clickLoadSave="onClick_LoadSave"
       />
     </div>
@@ -83,7 +84,9 @@ import { LocalStorage } from "quasar";
 import ExcelJS from "exceljs/dist/es5/exceljs.browser.js";
 import { saveAs } from "file-saver";
 import SaveDataClass from "../misc/SaveData";
+import initialCore from "../misc/initial_core.json";
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
+console.log({ initialCore });
 
 const wpSaves = new SaveDataClass("wp_saves");
 //runCode({ v1: 1, v2: 2 }, "return v1+v2;");
@@ -204,6 +207,11 @@ export default {
       this.savesList = wpSaves.getList();
       this.loadedSaveId = id;
     },
+    onClick_SaveAsJson() {
+      const json = JSON.stringify(this.core, null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      saveAs(blob, `${getFilename()}.json`);
+    },
     onClick_LoadSave(id) {
       console.log("onClick_LoadSave", { id });
       const saveData = wpSaves.getData(id);
@@ -236,7 +244,7 @@ export default {
         this.core = state.core;
         this.loadedSaveId = state.loadedSaveId;
       } else {
-        this.onClick_New();
+        this.core = initialCore;
       }
     },
     async downloadExcel() {

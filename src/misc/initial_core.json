@@ -1,0 +1,33 @@
+[
+  {
+    "var": {
+      "name": "a",
+      "val": [
+        "Welcome",
+        "to",
+        "ADS",
+        "Tool"
+      ]
+    }
+  },
+  {
+    "var": {
+      "name": "b",
+      "val": [
+        "Please",
+        "press",
+        "Play",
+        "icon"
+      ]
+    }
+  },
+  {
+    "code": "console.log(\"arguments\", arguments);\n\nlet res = [];\na.forEach(\n\taa => {\n  \tb.forEach(\n    \tbb => {\n      \tlet textLine = `${aa} ${bb}`;\n      \tres.push(textLine)\n      }\n    )\n  }\n);\nreturn {c: res};"
+  },
+  {
+    "var": {
+      "name": "c",
+      "val": []
+    }
+  }
+]

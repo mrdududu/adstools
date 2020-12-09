@@ -10,6 +10,9 @@
         <q-item clickable v-close-popup @click="$emit('clickSaveAs')">
           <q-item-section>Save as</q-item-section>
         </q-item>
+        <q-item clickable v-close-popup @click="$emit('clickSaveAsJson')">
+          <q-item-section>Save as JSON</q-item-section>
+        </q-item>
       </q-list>
     </q-btn-dropdown>
     <q-btn-dropdown
@@ -32,8 +35,8 @@
     <q-space />
     <q-btn
       flat
-      round
       dense
+      label="Excel"
       icon="grid_on"
       class="q-mx-sm"
       @click="$emit('clickDownloadExcel')"
@@ -41,8 +44,8 @@
     <q-separator vertical inset />
     <q-btn
       flat
-      round
       dense
+      label="Run"
       icon="play_circle_filled"
       class="q-mx-sm"
       @click="$emit('clickRun')"
