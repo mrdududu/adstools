@@ -1,8 +1,8 @@
 {
-  "name": "adstools",
+  "name": "adstool",
   "version": "0.0.1",
-  "description": "Ads Tools app",
-  "productName": "Ads Tools",
+  "description": "Ads Tool app",
+  "productName": "Ads Tool",
   "author": "Semen Ishinov <ectoplazm@gmail.com>",
   "private": true,
   "scripts": {
