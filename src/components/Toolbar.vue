@@ -32,6 +32,14 @@
         </q-item>
       </q-list>
     </q-btn-dropdown>
+    <q-btn flat label="Load JSON" @click="$refs.inputFileJson.click()" />
+    <input
+      style="display: none;"
+      ref="inputFileJson"
+      type="file"
+      accept=".json"
+      @change="onChangeInputFileJson"
+    />
     <q-space />
     <q-btn
       flat
@@ -67,6 +75,13 @@ export default {
     clickLoadSave(id) {
       // console.log("clickLoadSave", { id });
       this.$emit("clickLoadSave", id);
+    },
+    onChangeInputFileJson(event) {
+      // console.log("onChangeInputFileJson", event);
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = e => this.$emit("loadedInputFileJson", e.target.result);
+      reader.readAsText(file);
     }
   }
 };

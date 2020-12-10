@@ -1,7 +1,7 @@
 <template>
   <q-card flat bordered class="q-ma-sm flex column" style="min-width: 300px;">
     <q-card-section>
-      <q-input standout dense label="Name" :value="name" v-model="nameInput">
+      <q-input standout dense label="Var" :value="name" v-model="nameInput">
         <template v-slot:after>
           <q-btn
             v-if="index > 0"

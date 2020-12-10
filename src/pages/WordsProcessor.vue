@@ -11,6 +11,7 @@
         @clickSaveAs="onClick_SaveAs"
         @clickSaveAsJson="onClick_SaveAsJson"
         @clickLoadSave="onClick_LoadSave"
+        @loadedInputFileJson="onLoaded_InputFileJson"
       />
     </div>
     <div style="flex: 1 0 0; display: flex; overflow-x: auto;">
@@ -212,6 +213,11 @@ export default {
       const blob = new Blob([json], { type: "application/json" });
       saveAs(blob, `${getFilename()}.json`);
     },
+    onLoaded_InputFileJson(json) {
+      const oJson = JSON.parse(json);
+      this.core = oJson;
+      this.loadedSaveId = null;
+    },
     onClick_LoadSave(id) {
       console.log("onClick_LoadSave", { id });
       const saveData = wpSaves.getData(id);
@@ -255,7 +261,7 @@ export default {
 
       sheetArray.forEach(sheetRow => {
         const row = ws.addRow(sheetRow);
-        row.font = { bold: true };
+        // row.font = { bold: true };
       });
 
       const buf = await wb.xlsx.writeBuffer();
