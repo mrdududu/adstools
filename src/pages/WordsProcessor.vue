@@ -4,6 +4,7 @@
       <ToolBar
         :savesList="savesList"
         :selectedSaveId="loadedSaveId"
+        :presets="presets"
         @clickDownloadExcel="downloadExcel()"
         @clickRun="onClick_Run"
         @clickNew="onClick_New"
@@ -12,6 +13,7 @@
         @clickSaveAsJson="onClick_SaveAsJson"
         @clickLoadSave="onClick_LoadSave"
         @loadedInputFileJson="onLoaded_InputFileJson"
+        @selectedPreset="onSelected_Preset"
       />
     </div>
     <div style="flex: 1 0 0; display: flex; overflow-x: auto;">
@@ -29,8 +31,9 @@
         <template v-else-if="item.code != null">
           <div class="q-my-lg" :key="'plus_' + index">
             <q-btn
-              flat
-              round
+              push
+              no-wrap
+              label="Var"
               icon="add"
               @click="
                 () => {
@@ -48,10 +51,11 @@
           />
         </template>
       </template>
-      <div class="q-pa-lg">
+      <div class="q-pa-lg" style="display: flex; flex-direction: column;">
         <q-btn
-          flat
-          round
+          push
+          no-wrap
+          label="Var"
           icon="add"
           @click="
             () => {
@@ -61,8 +65,9 @@
         />
         <q-btn
           class="q-mt-sm"
-          flat
-          round
+          push
+          no-wrap
+          label="js"
           icon="wysiwyg"
           @click="
             () => {
@@ -86,6 +91,8 @@ import ExcelJS from "exceljs/dist/es5/exceljs.browser.js";
 import { saveAs } from "file-saver";
 import SaveDataClass from "../misc/SaveData";
 import initialCore from "../misc/initial_core.json";
+import presetsJson from "../misc/presets.json";
+import { presets } from "app/babel.config";
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 console.log({ initialCore });
 
@@ -125,7 +132,8 @@ export default {
     return {
       core: [],
       loadedSaveId: null,
-      savesList: wpSaves.getList()
+      savesList: wpSaves.getList(),
+      presets: presetsJson
     };
   },
   methods: {
@@ -224,6 +232,10 @@ export default {
       // console.log({ saveData });
       this.loadedSaveId = id;
       this.core = saveData;
+    },
+    onSelected_Preset(preset) {
+      // console.log("onSelected_Preset");
+      this.core = preset.core;
     },
     insertVar({ index, val }) {
       index = index === undefined || index === null ? this.core.length : index;

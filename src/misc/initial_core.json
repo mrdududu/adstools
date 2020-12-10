@@ -2,23 +2,13 @@
   {
     "var": {
       "name": "a",
-      "val": [
-        "Welcome",
-        "to",
-        "ADS",
-        "Tool"
-      ]
+      "val": ["Welcome", "to", "ADS", "Tool"]
     }
   },
   {
     "var": {
       "name": "b",
-      "val": [
-        "Please",
-        "press",
-        "Play",
-        "icon"
-      ]
+      "val": ["Please", "press", "Run", "button"]
     }
   },
   {

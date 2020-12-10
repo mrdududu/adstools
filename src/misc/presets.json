@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Join two lists",
+    "core": [
+      {
+        "var": {
+          "name": "colors",
+          "val": [
+            "red",
+            "orange",
+            "yellow",
+            "green",
+            "blue",
+            "indigo",
+            "violet"
+          ]
+        }
+      },
+      {
+        "var": {
+          "name": "vehicles",
+          "val": [
+            "bike",
+            "motorcycle",
+            "car",
+            "bus",
+            "truck",
+            "submarine",
+            "hot air balloon"
+          ]
+        }
+      },
+      {
+        "code": "var result = [];\n\ncolors.forEach(\n\tcolor => {\n  \tvehicles.forEach(\n    \tvehicle => {\n      \tresult.push(`${color} ${vehicle}`)\n      }\n    )\n  }\n);\nreturn {result};"
+      },
+      {
+        "var": {
+          "name": "result",
+          "val": []
+        }
+      }
+    ]
+  }
+]

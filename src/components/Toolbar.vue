@@ -40,6 +40,20 @@
       accept=".json"
       @change="onChangeInputFileJson"
     />
+    <q-separator vertical inset />
+    <q-btn-dropdown flat label="Select preset">
+      <q-list>
+        <q-item
+          v-for="(preset, index) in presets"
+          :key="index"
+          clickable
+          v-close-popup
+          @click="$emit('selectedPreset', preset)"
+        >
+          <q-item-section>{{ preset.name }}</q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
     <q-space />
     <q-btn
       flat
@@ -62,7 +76,7 @@
 </template>
 <script>
 export default {
-  props: ["savesList", "selectedSaveId"],
+  props: ["savesList", "selectedSaveId", "presets"],
   computed: {
     ddSavesList() {
       return this.savesList.filter(item => item.id != this.selectedSaveId);
