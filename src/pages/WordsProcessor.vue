@@ -17,6 +17,20 @@
       />
     </div>
     <div style="flex: 1 0 0; display: flex; overflow-x: auto;">
+      <ResizableHorizontal
+        min-width="50"
+        width="200"
+        innerStyle="min-width: 200px;"
+      >
+        <div>Test1</div>
+      </ResizableHorizontal>
+      <ResizableHorizontal
+        min-width="50"
+        width="300"
+        innerStyle="min-width: 300px;"
+      >
+        <div>Tes2</div>
+      </ResizableHorizontal>
       <template v-for="(item, index) in core">
         <ValueCard
           v-if="item.var"
@@ -126,7 +140,8 @@ export default {
     ToolBar: () => import("components/Toolbar"),
     ValueCard: () => import("components/ValueCard"),
     CodeCard: () => import("components/CodeCard"),
-    PromptDialog: () => import("components/PromptDialog")
+    PromptDialog: () => import("components/PromptDialog"),
+    ResizableHorizontal: () => import("components/ResizableHorizontal")
   },
   data() {
     return {
