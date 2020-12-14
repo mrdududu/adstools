@@ -21,26 +21,12 @@ export default {
   },
   methods: {
     handlePan(event) {
-      // console.log("mouseMove", { event });
-      // console.log(
-      //   "minWidth",
-      //   this.$refs.main.clientWidth + event.offset.x + "px"
-      // );
-      //event.offset.x
-      //event.direction
-      // this.$refs.main.style.width =
-      //   this.$refs.main.clientWidth + event.offset.x;
       this.style = {
         minWidth: this.$refs.main.clientWidth + event.delta.x + "px"
       };
     }
   },
-  created() {
-    //     this.$refs.resizer.addEventListener("mousedown", function(e){
-    //     m_pos = e.x;
-    //     document.addEventListener("mousemove", resize, false);
-    // }, false);
-  }
+  created() {}
 };
 </script>
 <style lang="css" scoped>
@@ -49,12 +35,15 @@ export default {
   /* background-color: red; */
 }
 .resizable {
-  background-color: #ccc;
+  /* background-color: #ccc; */
   flex: 1 0 0;
+  display: flex;
 }
 .resizer {
-  width: 4px;
-  background-color: #666;
+  padding: 0 2px;
+  width: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
+  background-clip: content-box;
   cursor: w-resize;
 }
 </style>

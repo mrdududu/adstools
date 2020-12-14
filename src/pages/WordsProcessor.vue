@@ -17,33 +17,25 @@
       />
     </div>
     <div style="flex: 1 0 0; display: flex; overflow-x: auto;">
-      <ResizableHorizontal
-        min-width="50"
-        width="200"
-        innerStyle="min-width: 200px;"
-      >
-        <div>Test1</div>
-      </ResizableHorizontal>
-      <ResizableHorizontal
-        min-width="50"
-        width="300"
-        innerStyle="min-width: 300px;"
-      >
-        <div>Tes2</div>
-      </ResizableHorizontal>
       <template v-for="(item, index) in core">
-        <ValueCard
+        <ResizableHorizontal
           v-if="item.var"
           :key="index"
-          :index="index"
-          :name="item.var.name"
-          :val="item.var.val"
-          @valChanged="onValChanged"
-          @nameChanged="onNameChanged"
-          @deleteValue="onDeleteValue"
-        />
+          innerStyle="min-width: 300px;"
+        >
+          <div class="q-pa-sm" style="display: flex; width: 100%;">
+            <ValueCard
+              :index="index"
+              :name="item.var.name"
+              :val="item.var.val"
+              @valChanged="onValChanged"
+              @nameChanged="onNameChanged"
+              @deleteValue="onDeleteValue"
+            />
+          </div>
+        </ResizableHorizontal>
         <template v-else-if="item.code != null">
-          <div class="q-my-lg" :key="'plus_' + index">
+          <div class="q-my-lg q-mx-sm" :key="'plus_' + index">
             <q-btn
               push
               no-wrap
