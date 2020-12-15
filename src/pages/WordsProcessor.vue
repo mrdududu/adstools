@@ -1,6 +1,6 @@
 <template>
-  <q-page style="display: flex; flex-direction: column;">
-    <div class="q-pa-sm q-pt-md">
+  <q-page class="flex column no-wrap">
+    <div class="q-pa-sm q-pt-md" style="position: relative;">
       <ToolBar
         :savesList="savesList"
         :selectedSaveId="loadedSaveId"
@@ -16,14 +16,14 @@
         @selectedPreset="onSelected_Preset"
       />
     </div>
-    <div style="flex: 1 0 0; display: flex; overflow-x: auto;">
+    <div class="flex no-wrap content-block">
       <template v-for="(item, index) in core">
         <ResizableHorizontal
           v-if="item.var"
           :key="index"
-          innerStyle="min-width: 300px;"
+          innerStyle="flex-basis: 300px;"
         >
-          <div class="q-pa-sm" style="display: flex; width: 100%;">
+          <div class="q-pa-sm flex" style="width: 100%;">
             <ValueCard
               :index="index"
               :name="item.var.name"
@@ -48,16 +48,19 @@
               "
             />
           </div>
-          <CodeCard
-            :key="index"
-            :index="index"
-            :code="item.code"
-            @codeChanged="onCodeChanged"
-            @deleteCode="onDeleteCode"
-          />
+          <ResizableHorizontal :key="index" innerStyle="flex-basis: 400px;">
+            <div class="q-pa-sm flex" style="width: 100%;">
+              <CodeCard
+                :index="index"
+                :code="item.code"
+                @codeChanged="onCodeChanged"
+                @deleteCode="onDeleteCode"
+              />
+            </div>
+          </ResizableHorizontal>
         </template>
       </template>
-      <div class="q-pa-lg" style="display: flex; flex-direction: column;">
+      <div class="q-pa-lg flex column">
         <q-btn
           push
           no-wrap
@@ -345,3 +348,12 @@ export default {
   }
 };
 </script>
+<style scoped>
+.content-block {
+  flex: 1 0 0;
+  overflow-x: auto;
+}
+.content-col {
+  flex: 1 0 400px;
+}
+</style>

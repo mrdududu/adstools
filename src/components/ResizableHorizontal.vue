@@ -22,7 +22,7 @@ export default {
   methods: {
     handlePan(event) {
       this.style = {
-        minWidth: this.$refs.main.clientWidth + event.delta.x + "px"
+        flexBasis: this.$refs.main.clientWidth + event.delta.x + "px"
       };
     }
   },
@@ -31,6 +31,7 @@ export default {
 </script>
 <style lang="css" scoped>
 .root {
+  flex: 1 0 300px;
   display: flex;
   /* background-color: red; */
 }
