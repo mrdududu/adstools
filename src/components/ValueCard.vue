@@ -1,5 +1,5 @@
 <template>
-  <q-card flat bordered class="q-ma-sm flex column" style="min-width: 300px;">
+  <q-card flat bordered class="full-width flex column">
     <q-card-section>
       <q-input standout dense label="Var" :value="name" v-model="nameInput">
         <template v-slot:after>

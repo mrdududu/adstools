@@ -1,6 +1,6 @@
 <template>
-  <q-page style="display: flex; flex-direction: column;">
-    <div class="q-pa-sm q-pt-md">
+  <q-page class="flex column no-wrap">
+    <div class="q-pa-sm q-pt-md" style="position: relative;">
       <ToolBar
         :savesList="savesList"
         :selectedSaveId="loadedSaveId"
@@ -16,20 +16,26 @@
         @selectedPreset="onSelected_Preset"
       />
     </div>
-    <div style="flex: 1 0 0; display: flex; overflow-x: auto;">
+    <div class="flex no-wrap content-block">
       <template v-for="(item, index) in core">
-        <ValueCard
+        <ResizableHorizontal
           v-if="item.var"
           :key="index"
-          :index="index"
-          :name="item.var.name"
-          :val="item.var.val"
-          @valChanged="onValChanged"
-          @nameChanged="onNameChanged"
-          @deleteValue="onDeleteValue"
-        />
+          innerStyle="flex-basis: 300px;"
+        >
+          <div class="q-pa-sm flex" style="width: 100%;">
+            <ValueCard
+              :index="index"
+              :name="item.var.name"
+              :val="item.var.val"
+              @valChanged="onValChanged"
+              @nameChanged="onNameChanged"
+              @deleteValue="onDeleteValue"
+            />
+          </div>
+        </ResizableHorizontal>
         <template v-else-if="item.code != null">
-          <div class="q-my-lg" :key="'plus_' + index">
+          <div class="q-my-lg q-mx-sm" :key="'plus_' + index">
             <q-btn
               push
               no-wrap
@@ -42,16 +48,19 @@
               "
             />
           </div>
-          <CodeCard
-            :key="index"
-            :index="index"
-            :code="item.code"
-            @codeChanged="onCodeChanged"
-            @deleteCode="onDeleteCode"
-          />
+          <ResizableHorizontal :key="index" innerStyle="flex-basis: 400px;">
+            <div class="q-pa-sm flex" style="width: 100%;">
+              <CodeCard
+                :index="index"
+                :code="item.code"
+                @codeChanged="onCodeChanged"
+                @deleteCode="onDeleteCode"
+              />
+            </div>
+          </ResizableHorizontal>
         </template>
       </template>
-      <div class="q-pa-lg" style="display: flex; flex-direction: column;">
+      <div class="q-pa-lg flex column">
         <q-btn
           push
           no-wrap
@@ -126,7 +135,8 @@ export default {
     ToolBar: () => import("components/Toolbar"),
     ValueCard: () => import("components/ValueCard"),
     CodeCard: () => import("components/CodeCard"),
-    PromptDialog: () => import("components/PromptDialog")
+    PromptDialog: () => import("components/PromptDialog"),
+    ResizableHorizontal: () => import("components/ResizableHorizontal")
   },
   data() {
     return {
@@ -338,3 +348,12 @@ export default {
   }
 };
 </script>
+<style scoped>
+.content-block {
+  flex: 1 0 0;
+  overflow-x: auto;
+}
+.content-col {
+  flex: 1 0 400px;
+}
+</style>

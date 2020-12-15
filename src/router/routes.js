@@ -3,7 +3,8 @@ const routes = [
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("pages/WordsProcessor.vue") }
+      { path: "", component: () => import("pages/WordsProcessor.vue") },
+      { path: "testpage", component: () => import("pages/TestPage.vue") }
     ]
   },
 
