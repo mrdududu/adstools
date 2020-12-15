@@ -160,12 +160,38 @@ export default {
       this.core[data.index].code = data.code;
     },
     onDeleteValue(index) {
-      // console.log("onDeleteValue", index);
-      this.core.splice(index, 1);
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "Are you sure to delete this value?",
+          cancel: true,
+          persistent: true
+        })
+        .onOk(() => {
+          this.core.splice(index, 1);
+          this.$q.notify({
+            message: "Value is deleted.",
+            icon: "announcement",
+            timeout: 2000
+          });
+        });
     },
     onDeleteCode(index) {
-      // console.log("onDeleteCode", index);
-      this.core.splice(index, 1);
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "Are you sure to delete this code?",
+          cancel: true,
+          persistent: true
+        })
+        .onOk(() => {
+          this.core.splice(index, 1);
+          this.$q.notify({
+            message: "Code is deleted.",
+            icon: "announcement",
+            timeout: 2000
+          });
+        });
     },
     onClick_Run() {
       let vars = {};
@@ -188,6 +214,13 @@ export default {
       }
 
       this.saveState();
+
+      this.$q.notify({
+        type: "positive",
+        message: "Code running complete",
+        icon: "check_circle",
+        timeout: 2000
+      });
     },
     onClick_AddVar(index) {
       // console.log("onClick_AddVar", { index });
@@ -212,6 +245,11 @@ export default {
       if (this.loadedSaveId) {
         wpSaves.save({ id: this.loadedSaveId, data: this.core });
         this.savesList = wpSaves.getList();
+        this.$q.notify({
+          type: "info",
+          message: `Saved`,
+          timeout: 2000
+        });
       } else {
         this.$refs.dialogSaveAs.show();
       }
@@ -225,6 +263,12 @@ export default {
       const id = wpSaves.save({ title: prompt, data: this.core });
       this.savesList = wpSaves.getList();
       this.loadedSaveId = id;
+
+      this.$q.notify({
+        type: "info",
+        message: `Saved as ${prompt}`,
+        timeout: 2000
+      });
     },
     onClick_SaveAsJson() {
       const json = JSON.stringify(this.core, null, 2);
@@ -242,10 +286,22 @@ export default {
       // console.log({ saveData });
       this.loadedSaveId = id;
       this.core = saveData;
+
+      this.$q.notify({
+        type: "info",
+        message: `Save is loaded.`,
+        timeout: 2000
+      });
     },
     onSelected_Preset(preset) {
-      // console.log("onSelected_Preset");
+      // console.log("onSelected_Preset", { preset });
       this.core = preset.core;
+
+      this.$q.notify({
+        type: "info",
+        message: `Preset "${preset.name}" is loaded.`,
+        timeout: 2000
+      });
     },
     insertVar({ index, val }) {
       index = index === undefined || index === null ? this.core.length : index;
