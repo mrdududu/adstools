@@ -31,6 +31,7 @@
               @valChanged="onValChanged"
               @nameChanged="onNameChanged"
               @deleteValue="onDeleteValue"
+              @dropCard="onDropCard"
             />
           </div>
         </ResizableHorizontal>
@@ -192,6 +193,13 @@ export default {
             timeout: 2000
           });
         });
+    },
+    onDropCard(e) {
+      // console.log("onDropCard", e);
+
+      const droppedData = this.core[e.droppedIndex];
+      this.core.splice(e.droppedIndex, 1);
+      this.core.splice(e.eventIndex, 0, droppedData);
     },
     onClick_Run() {
       let vars = {};

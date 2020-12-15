@@ -1,5 +1,11 @@
 <template>
-  <q-card flat bordered class="full-width flex column">
+  <q-card
+    ref="valueCard"
+    flat
+    bordered
+    class="full-width flex column"
+    draggable="true"
+  >
     <q-card-section>
       <q-input standout dense label="Var" :value="name" v-model="nameInput">
         <template v-slot:after>
@@ -83,6 +89,20 @@ export default {
   created() {
     this.nameInput = this.name;
     this.valInput = valToText(this.val);
+  },
+  mounted() {
+    // console.log("mounted", this.$refs.valueCard);
+    this.$refs.valueCard.$el.addEventListener("dragstart", e => {
+      // console.log("dragstart", { e });
+      e.dataTransfer.setData("text/plain", this.index);
+    });
+
+    this.$refs.valueCard.$el.addEventListener("drop", e => {
+      e.preventDefault();
+
+      const droppedIndex = Number(e.dataTransfer.getData("text/plain"));
+      this.$emit("dropCard", { droppedIndex, eventIndex: this.index });
+    });
   }
 };
 </script>
