@@ -1,7 +1,7 @@
 <template>
   <q-card flat bordered class="full-width flex column">
     <q-card-section>
-      <q-input standout dense label="Code" readonly>
+      <q-input standout dense label="JavaScript" readonly>
         <template v-slot:after>
           <q-btn
             round

@@ -43,5 +43,41 @@
         }
       }
     ]
+  },
+  {
+    "name": "Join many lists",
+    "core": [
+      {
+        "var": {
+          "name": "a",
+          "val": ["a1", "a2", "a3"],
+          "selected": false
+        }
+      },
+      {
+        "var": {
+          "name": "b",
+          "val": ["b1", "b2", "b3"],
+          "selected": false
+        }
+      },
+      {
+        "var": {
+          "name": "c",
+          "val": ["c1", "c2", "c3"],
+          "selected": false
+        }
+      },
+      {
+        "code": "const join2Array = (arr1, arr2) => {\n\tconst res = [];\n\n\tarr1.forEach(\n    el1 => {\n      arr2.forEach(\n        el2 => {\n          res.push(`${el1} ${el2}`)\n        }\n      )\n    }\n  );\n  \n  return res;\n}\n\nconst joinMultiArray = multiArray => {\n\tif (1 < multiArray.length){\n  \tconst arr1 = multiArray.shift();\n    const arr2 = multiArray.shift();\n    const newArr = join2Array(arr1, arr2);\n    multiArray.unshift(newArr);\n    joinMultiArray(multiArray);\n  }\n  \n  return multiArray[0];\n}\n\nconst result = joinMultiArray([...arguments]);\n\nreturn {d: result}"
+      },
+      {
+        "var": {
+          "name": "d",
+          "val": [],
+          "selected": true
+        }
+      }
+    ]
   }
 ]
