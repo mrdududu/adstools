@@ -2,13 +2,15 @@
   {
     "var": {
       "name": "a",
-      "val": ["Welcome", "to", "ADS", "Tool"]
+      "val": ["Welcome", "to", "ADS", "Tool"],
+      "selected": false
     }
   },
   {
     "var": {
       "name": "b",
-      "val": ["Please", "press", "Run", "button"]
+      "val": ["Please", "press", "Run", "button"],
+      "selected": false
     }
   },
   {
@@ -17,7 +19,8 @@
   {
     "var": {
       "name": "c",
-      "val": []
+      "val": [],
+      "selected": true
     }
   }
 ]

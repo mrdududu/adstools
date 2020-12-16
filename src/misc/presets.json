@@ -13,7 +13,8 @@
             "blue",
             "indigo",
             "violet"
-          ]
+          ],
+          "selected": false
         }
       },
       {
@@ -27,7 +28,8 @@
             "truck",
             "submarine",
             "hot air balloon"
-          ]
+          ],
+          "selected": false
         }
       },
       {
@@ -36,7 +38,8 @@
       {
         "var": {
           "name": "result",
-          "val": []
+          "val": [],
+          "selected": true
         }
       }
     ]

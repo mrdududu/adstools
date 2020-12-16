@@ -305,7 +305,7 @@ export default {
       val = val ? val : null;
 
       const name = alphabet[this.core.filter(item => item.var).length];
-      this.core.splice(index, 0, { var: { name, val } });
+      this.core.splice(index, 0, { var: { name, val, selected: false } });
     },
     insertCode({ index, code }) {
       index = index === undefined || index === null ? this.core.length : index;
