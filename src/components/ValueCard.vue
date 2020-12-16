@@ -7,7 +7,10 @@
     draggable="true"
   >
     <q-card-section>
-      <q-input standout dense label="Var" :value="name" v-model="nameInput">
+      <q-input standout dense label="Var" v-model="value.name">
+        <template v-slot:before>
+          <q-checkbox v-model="value.selected" />
+        </template>
         <template v-slot:after>
           <q-btn
             v-if="index > 0"
@@ -21,7 +24,8 @@
     ></q-card-section>
     <q-card-section class="flex column" style="flex: 1 0 0;">
       <textarea
-        v-model="valInput"
+        :value="valText"
+        @input="onValTextInput"
         style="flex: 1 0 0;  overflow-x: auto;"
       ></textarea>
     </q-card-section>
@@ -49,46 +53,18 @@ const valToText = val => {
 };
 
 export default {
-  props: ["name", "val", "index"],
-  data() {
-    return {
-      nameInput: "",
-      valInput: ""
-    };
-  },
-  watch: {
-    nameInput(newName) {
-      if (newName != this.name) {
-        this.$emit("nameChanged", {
-          index: this.index,
-          name: newName
-        });
-      }
-    },
-    valInput(newText) {
-      const textVal = valToText(this.val);
-      if (newText != textVal) {
-        this.$emit("valChanged", {
-          index: this.index,
-          val: textToVal(newText)
-        });
-      }
-    },
-    name(newName) {
-      if (newName != this.nameInput) {
-        this.nameInput = newName;
-      }
-    },
-    val(newVal) {
-      const newValText = valToText(newVal);
-      if (newValText != this.text) {
-        this.valInput = newValText;
-      }
+  props: ["value", "index"],
+  computed: {
+    valText() {
+      return valToText(this.value.val);
     }
   },
-  created() {
-    this.nameInput = this.name;
-    this.valInput = valToText(this.val);
+  methods: {
+    onValTextInput(event) {
+      // console.log("onValTextInput", event);
+      const newValue = textToVal(event.target.value);
+      this.value.val = newValue;
+    }
   },
   mounted() {
     // console.log("mounted", this.$refs.valueCard);

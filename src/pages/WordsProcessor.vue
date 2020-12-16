@@ -26,10 +26,7 @@
           <div class="q-pa-sm flex" style="width: 100%;">
             <ValueCard
               :index="index"
-              :name="item.var.name"
-              :val="item.var.val"
-              @valChanged="onValChanged"
-              @nameChanged="onNameChanged"
+              :value.sync="item.var"
               @deleteValue="onDeleteValue"
               @dropCard="onDropCard"
             />
@@ -148,14 +145,6 @@ export default {
     };
   },
   methods: {
-    onNameChanged(data) {
-      // console.log("onNameChanged data", data);
-      this.core[data.index].var.name = data.name;
-    },
-    onValChanged(data) {
-      // console.log("onValChanged data", data);
-      this.core[data.index].var.val = data.val;
-    },
     onCodeChanged(data) {
       // console.log("onCodeChanged data", data);
       this.core[data.index].code = data.code;
@@ -358,7 +347,7 @@ export default {
       let maxRow = 0;
       const sheetArray = [];
       const namesRow = [];
-      const varsData = this.core.filter(item => item.var);
+      const varsData = this.core.filter(item => item.var && item.var.selected);
 
       varsData.forEach(varData => {
         let len = 1;
