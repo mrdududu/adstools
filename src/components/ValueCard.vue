@@ -4,10 +4,17 @@
     flat
     bordered
     class="full-width flex column"
-    draggable="true"
+    :draggable="draggable"
   >
     <q-card-section>
-      <q-input standout dense label="Var" v-model="value.name">
+      <q-input
+        standout
+        dense
+        label="Var"
+        v-model="value.name"
+        @focus="draggable = false"
+        @blur="draggable = true"
+      >
         <template v-slot:before>
           <q-checkbox v-model="value.selected" />
         </template>
@@ -27,7 +34,12 @@
         :value="valText"
         @input="onValTextInput"
         style="flex: 1 0 0;  overflow-x: auto;"
+        @focus="draggable = false"
+        @blur="draggable = true"
       ></textarea>
+      <div class="text-overline q-pt-xs" style="line-height: 1rem;">
+        Count: {{ value.val ? value.val.length : "" }}
+      </div>
     </q-card-section>
   </q-card>
 </template>
@@ -54,6 +66,11 @@ const valToText = val => {
 
 export default {
   props: ["value", "index"],
+  data() {
+    return {
+      draggable: true
+    };
+  },
   computed: {
     valText() {
       return valToText(this.value.val);

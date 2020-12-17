@@ -79,5 +79,34 @@
         }
       }
     ]
+  },
+  {
+    "name": "Password generator",
+    "core": [
+      {
+        "var": {
+          "name": "letters",
+          "val": ["abcdefghijklmnopqrstuvwxyz1234567890"],
+          "selected": false
+        }
+      },
+      {
+        "var": {
+          "name": "passwordLength",
+          "val": ["8", "20"],
+          "selected": false
+        }
+      },
+      {
+        "code": "const minLen = Number(passwordLength[0]);\nconst maxLen = Number(passwordLength[1]);\nletters = letters[0];\nlet password = \"\";\n\nconst getRandomArbitrary = (min, max)=> {\n    return Math.round(Math.random() * (max - min) + min);\n}\n\nconst randPasswordLength = getRandomArbitrary(minLen, maxLen);\n\nfor(let i = 0; i < randPasswordLength; i++ ){\n\tlet symbol = letters[getRandomArbitrary(0, letters.length - 1)];\n  password += symbol;\n}\n\nreturn {password}"
+      },
+      {
+        "var": {
+          "name": "password",
+          "val": [],
+          "selected": true
+        }
+      }
+    ]
   }
 ]
