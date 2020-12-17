@@ -13,6 +13,14 @@
         <q-item clickable v-close-popup @click="$emit('clickSaveAsJson')">
           <q-item-section>Save as JSON</q-item-section>
         </q-item>
+        <q-item
+          v-if="selectedSaveId"
+          clickable
+          v-close-popup
+          @click="$emit('clickDeleteSave', { saveId: selectedSaveId })"
+        >
+          <q-item-section>Delete save</q-item-section>
+        </q-item>
       </q-list>
     </q-btn-dropdown>
     <q-btn-dropdown

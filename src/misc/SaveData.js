@@ -64,6 +64,16 @@ class SaveData {
 
     return id;
   }
+  delete(id) {
+    let storage = this.storage ? this.storage : [];
+    if (0 < storage.length) {
+      storage.splice(
+        storage.findIndex(item => item.id == id),
+        1
+      );
+      LocalStorage.set(this.storageName, storage);
+    }
+  }
 }
 
 export default SaveData;

@@ -12,6 +12,7 @@
         @clickSaveAs="onClick_SaveAs"
         @clickSaveAsJson="onClick_SaveAsJson"
         @clickLoadSave="onClick_LoadSave"
+        @clickDeleteSave="onClick_DeleteSave"
         @loadedInputFileJson="onLoaded_InputFileJson"
         @selectedPreset="onSelected_Preset"
       />
@@ -250,6 +251,20 @@ export default {
       } else {
         this.$refs.dialogSaveAs.show();
       }
+    },
+    onClick_DeleteSave({ saveId }) {
+      this.$q
+        .dialog({
+          title: "Delete save",
+          message: "Are you sure to delete this save?",
+          cancel: true,
+          persistent: true
+        })
+        .onOk(() => {
+          wpSaves.delete(saveId);
+          this.savesList = wpSaves.getList();
+          this.onClick_New();
+        });
     },
     onClick_SaveAs() {
       console.log("onClick_SaveAs");
