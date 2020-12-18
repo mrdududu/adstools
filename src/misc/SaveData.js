@@ -22,57 +22,64 @@ class SaveData {
     return [];
   }
   getData(id) {
-    const storage = this.storage;
-    if (Array.isArray(storage)) {
-      const elById = storage.find(item => item.id === id);
-      if (elById) {
-        return elById.data;
-      }
-    }
-
-    return null;
-  }
-  save({ id, title, data }) {
-    const storage = this.storage ? this.storage : [];
-    let isNew = true;
-    let elById = null;
-
-    if (0 < storage.length) {
-      if (id) {
-        elById = storage.find(item => item.id === id);
+    return new Promise((resolve, reject) => {
+      const storage = this.storage;
+      if (Array.isArray(storage)) {
+        const elById = storage.find(item => item.id === id);
         if (elById) {
-          isNew = false;
+          resolve(elById.data);
         }
       }
-    }
 
-    if (!isNew) {
-      elById.dateUpdate = Date.now();
-      elById.data = data;
-      if (title) elById.title = title;
-    } else {
-      id = id ? id : Date.now();
-      const newEl = {
-        id,
-        title: title ? title : id,
-        data
-      };
-      storage.push(newEl);
-    }
+      resolve(null);
+    });
+  }
+  save({ id, title, data }) {
+    return new Promise((resolve, reject) => {
+      const storage = this.storage ? this.storage : [];
+      let isNew = true;
+      let elById = null;
 
-    LocalStorage.set(this.storageName, storage);
+      if (0 < storage.length) {
+        if (id) {
+          elById = storage.find(item => item.id === id);
+          if (elById) {
+            isNew = false;
+          }
+        }
+      }
 
-    return id;
+      if (!isNew) {
+        elById.dateUpdate = Date.now();
+        elById.data = data;
+        if (title) elById.title = title;
+      } else {
+        id = id ? id : Date.now();
+        const newEl = {
+          id,
+          title: title ? title : id,
+          data
+        };
+        storage.push(newEl);
+      }
+
+      LocalStorage.set(this.storageName, storage);
+
+      resolve(id);
+    });
   }
   delete(id) {
-    let storage = this.storage ? this.storage : [];
-    if (0 < storage.length) {
-      storage.splice(
-        storage.findIndex(item => item.id == id),
-        1
-      );
-      LocalStorage.set(this.storageName, storage);
-    }
+    return new Promise((resolve, reject) => {
+      let storage = this.storage ? this.storage : [];
+      if (0 < storage.length) {
+        storage.splice(
+          storage.findIndex(item => item.id == id),
+          1
+        );
+        LocalStorage.set(this.storageName, storage);
+      }
+      resolve();
+    });
   }
 }
 

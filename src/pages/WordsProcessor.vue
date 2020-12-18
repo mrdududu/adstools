@@ -102,19 +102,23 @@ import initialCore from "../misc/initial_core.json";
 import presetsJson from "../misc/presets.json";
 import { presets } from "app/babel.config";
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
-console.log({ initialCore });
+// console.log({ initialCore });
 
 const wpSaves = new SaveDataClass("wp_saves");
-//runCode({ v1: 1, v2: 2 }, "return v1+v2;");
-const runCode = (vars, code) => {
-  // console.log("runCode", { vars, code });
 
-  const varNames = Object.keys(vars);
-  const varValues = varNames.map(name => vars[name]);
-  const fn = new Function(...varNames, code);
-  const res = fn(...varValues);
-  // console.log("res", res);
-  return res;
+//runCode({ v1: 1, v2: 2 }, "return v1+v2;");
+// ToDo implement this https://stackoverflow.com/questions/41587008/is-this-possible-to-limit-javascript-function-executing-time
+const runCode = (vars, code) => {
+  return new Promise((resolve, reject) => {
+    // console.log("runCode", { vars, code });
+
+    const varNames = Object.keys(vars);
+    const varValues = varNames.map(name => vars[name]);
+    const fn = new Function(...varNames, code);
+    const res = fn(...varValues);
+    // console.log("res", res);
+    resolve(res);
+  });
 };
 
 const getFilename = () => {
@@ -191,7 +195,7 @@ export default {
       this.core.splice(e.droppedIndex, 1);
       this.core.splice(e.eventIndex, 0, droppedData);
     },
-    onClick_Run() {
+    async onClick_Run() {
       let vars = {};
 
       for (let i = 0; i < this.core.length; i++) {
@@ -202,7 +206,7 @@ export default {
         } else if (el.code) {
           // console.log("vars", vars);
           // console.log("el.code", el.code);
-          const res = runCode(vars, el.code);
+          const res = await runCode(vars, el.code);
 
           const resNames = Object.keys(res);
           resNames.forEach(name => {
@@ -211,7 +215,7 @@ export default {
         }
       }
 
-      this.saveState();
+      await this.saveState();
 
       this.$q.notify({
         type: "positive",
@@ -237,11 +241,11 @@ export default {
       this.insertCode({ code: "return {b: a}" });
       this.insertVar({ val: null });
     },
-    onClick_Save() {
+    async onClick_Save() {
       //resumeState
       console.log("onClick_Save");
       if (this.loadedSaveId) {
-        wpSaves.save({ id: this.loadedSaveId, data: this.core });
+        await wpSaves.save({ id: this.loadedSaveId, data: this.core });
         this.savesList = wpSaves.getList();
         this.$q.notify({
           type: "info",
@@ -260,8 +264,8 @@ export default {
           cancel: true,
           persistent: true
         })
-        .onOk(() => {
-          wpSaves.delete(saveId);
+        .onOk(async () => {
+          await wpSaves.delete(saveId);
           this.savesList = wpSaves.getList();
           this.onClick_New();
         });
@@ -270,9 +274,9 @@ export default {
       console.log("onClick_SaveAs");
       this.$refs.dialogSaveAs.show();
     },
-    onOk_SaveAs(prompt) {
+    async onOk_SaveAs(prompt) {
       console.log("onClick_SaveAs", { prompt });
-      const id = wpSaves.save({ title: prompt, data: this.core });
+      const id = await wpSaves.save({ title: prompt, data: this.core });
       this.savesList = wpSaves.getList();
       this.loadedSaveId = id;
 
@@ -292,9 +296,9 @@ export default {
       this.core = oJson;
       this.loadedSaveId = null;
     },
-    onClick_LoadSave(id) {
+    async onClick_LoadSave(id) {
       console.log("onClick_LoadSave", { id });
-      const saveData = wpSaves.getData(id);
+      const saveData = await wpSaves.getData(id);
       // console.log({ saveData });
       this.loadedSaveId = id;
       this.core = saveData;
@@ -328,20 +332,26 @@ export default {
       this.core.splice(index, 0, { code });
     },
     saveState() {
-      LocalStorage.set("state", {
-        core: this.core,
-        loadedSaveId: this.loadedSaveId
+      return new Promise((resolve, reject) => {
+        LocalStorage.set("state", {
+          core: this.core,
+          loadedSaveId: this.loadedSaveId
+        });
+        resolve();
       });
     },
     resumeState() {
-      const state = LocalStorage.getItem("state");
-      this.savesList = wpSaves.getList();
-      if (state) {
-        this.core = state.core;
-        this.loadedSaveId = state.loadedSaveId;
-      } else {
-        this.core = initialCore;
-      }
+      return new Promise((resolve, reject) => {
+        const state = LocalStorage.getItem("state");
+        this.savesList = wpSaves.getList();
+        if (state) {
+          this.core = state.core;
+          this.loadedSaveId = state.loadedSaveId;
+        } else {
+          this.core = initialCore;
+        }
+        resolve();
+      });
     },
     async downloadExcel() {
       const sheetArray = this.getSheetArray();
@@ -411,8 +421,8 @@ export default {
       }
     }
   },
-  created() {
-    this.resumeState();
+  async created() {
+    await this.resumeState();
   }
 };
 </script>
