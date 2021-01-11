@@ -145,7 +145,7 @@ export default {
     return {
       core: [],
       loadedSaveId: null,
-      savesList: wpSaves.getList(),
+      savesList: [],
       presets: presetsJson
     };
   },
@@ -246,7 +246,7 @@ export default {
       console.log("onClick_Save");
       if (this.loadedSaveId) {
         await wpSaves.save({ id: this.loadedSaveId, data: this.core });
-        this.savesList = wpSaves.getList();
+        this.savesList = await wpSaves.getList();
         this.$q.notify({
           type: "info",
           message: `Saved`,
@@ -266,7 +266,7 @@ export default {
         })
         .onOk(async () => {
           await wpSaves.delete(saveId);
-          this.savesList = wpSaves.getList();
+          this.savesList = await wpSaves.getList();
           this.onClick_New();
         });
     },
@@ -277,7 +277,7 @@ export default {
     async onOk_SaveAs(prompt) {
       console.log("onClick_SaveAs", { prompt });
       const id = await wpSaves.save({ title: prompt, data: this.core });
-      this.savesList = wpSaves.getList();
+      this.savesList = await wpSaves.getList();
       this.loadedSaveId = id;
 
       this.$q.notify({
@@ -341,9 +341,9 @@ export default {
       });
     },
     resumeState() {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         const state = LocalStorage.getItem("state");
-        this.savesList = wpSaves.getList();
+        this.savesList = await wpSaves.getList();
         if (state) {
           this.core = state.core;
           this.loadedSaveId = state.loadedSaveId;
@@ -422,6 +422,8 @@ export default {
     }
   },
   async created() {
+    this.savesList = await wpSaves.getList();
+
     await this.resumeState();
   }
 };

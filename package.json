@@ -12,6 +12,7 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
+    "dexie": "^3.0.3",
     "exceljs": "^4.2.0",
     "file-saver": "^2.0.5",
     "quasar": "^1.0.0",
