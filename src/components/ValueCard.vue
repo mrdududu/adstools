@@ -10,7 +10,7 @@
       <q-input
         standout
         dense
-        label="Var"
+        label="Array"
         v-model="value.name"
         @focus="draggable = false"
         @blur="draggable = true"
