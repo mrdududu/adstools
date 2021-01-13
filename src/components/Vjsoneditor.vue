@@ -8,14 +8,14 @@ export default {
   props: ["value"],
   watch: {
     value(newValue) {
-      console.log("watch new value", newValue);
+      // console.log("watch new value", newValue);
       if (this.jsoneditor) {
         this.jsoneditor.set(newValue);
       }
     }
   },
   mounted() {
-    console.log("this.$refs.jsoneditor", this.$refs.jsoneditor);
+    // console.log("this.$refs.jsoneditor", this.$refs.jsoneditor);
     const options = {
       mode: "tree",
       modes: ["code", "tree", "form", "view"],
