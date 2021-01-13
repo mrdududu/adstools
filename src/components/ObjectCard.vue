@@ -19,13 +19,21 @@
           <q-btn round dense flat icon="more_vert">
             <q-menu v-model="showMenu">
               <q-list style="min-width: 100px">
-                <!-- <q-item clickable>
-                  <q-item-section>Save as JSON</q-item-section>
+                <q-item clickable>
+                  <q-item-section @click="saveAsJson"
+                    >Save as JSON</q-item-section
+                  >
                 </q-item>
-                <q-separator /> -->
+                <q-separator />
                 <q-item clickable>
                   <q-item-section-file accept=".json" @onFileLoad="jsonLoaded"
                     >Load JSON</q-item-section-file
+                  >
+                </q-item>
+                <q-separator />
+                <q-item clickable v-close-popup>
+                  <q-item-section @click="$emit('deleteValue', index)"
+                    >Delete</q-item-section
                   >
                 </q-item>
                 <!-- <q-item clickable>
@@ -37,16 +45,9 @@
               </q-list>
             </q-menu>
           </q-btn>
-          <q-btn
-            v-if="index > 0"
-            round
-            dense
-            flat
-            icon="delete"
-            @click="$emit('deleteValue', index)"
-          />
-        </template> </q-input
-    ></q-card-section>
+        </template>
+      </q-input></q-card-section
+    >
     <q-card-section class="flex column" style="flex: 1 0 0;">
       <!-- <textarea
         :value="valText"
@@ -60,6 +61,8 @@
   </q-card>
 </template>
 <script>
+import { saveAs } from "file-saver";
+
 const textToVal = text => {
   if (!text) return null;
 
@@ -111,6 +114,12 @@ export default {
         const data = JSON.parse(fileData);
         this.value.val = data;
       } catch (err) {}
+    },
+    saveAsJson() {
+      this.showMenu = false;
+      const json = JSON.stringify(this.val, null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      saveAs(blob, `value_${this.value.name}.json`);
     }
   },
   mounted() {
