@@ -16,6 +16,27 @@
         @blur="draggable = true"
       >
         <template v-slot:after>
+          <q-btn round dense flat icon="more_vert">
+            <q-menu v-model="showMenu">
+              <q-list style="min-width: 100px">
+                <!-- <q-item clickable>
+                  <q-item-section>Save as JSON</q-item-section>
+                </q-item>
+                <q-separator /> -->
+                <q-item clickable>
+                  <q-item-section-file accept=".json" @onFileLoad="jsonLoaded"
+                    >Load JSON</q-item-section-file
+                  >
+                </q-item>
+                <!-- <q-item clickable>
+                  <q-item-section>Load Excel</q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section>Load CSV</q-item-section>
+                </q-item> -->
+              </q-list>
+            </q-menu>
+          </q-btn>
           <q-btn
             v-if="index > 0"
             round
@@ -65,12 +86,14 @@ const valToText = val => {
 
 export default {
   components: {
-    Vjsoneditor: () => import("components/Vjsoneditor")
+    Vjsoneditor: () => import("components/Vjsoneditor"),
+    qItemSectionFile: () => import("components/q-item-section-file")
   },
   props: ["value", "index"],
   data() {
     return {
-      draggable: true
+      draggable: true,
+      showMenu: false
     };
   },
   computed: {
@@ -81,6 +104,13 @@ export default {
   methods: {
     onValInput(val) {
       this.value.val = val;
+    },
+    jsonLoaded(fileData) {
+      try {
+        this.showMenu = false;
+        const data = JSON.parse(fileData);
+        this.value.val = data;
+      } catch (err) {}
     }
   },
   mounted() {

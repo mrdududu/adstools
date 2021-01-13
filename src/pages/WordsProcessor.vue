@@ -25,7 +25,15 @@
           innerStyle="flex-basis: 300px;"
         >
           <div class="q-pa-sm flex" style="width: 100%;">
+            <ObjectCard
+              v-if="item.var.type == 'object'"
+              :index="index"
+              :value.sync="item.var"
+              @deleteValue="onDeleteValue"
+              @dropCard="onDropCard"
+            />
             <ValueCard
+              v-else
               :index="index"
               :value.sync="item.var"
               @deleteValue="onDeleteValue"
@@ -34,15 +42,27 @@
           </div>
         </ResizableHorizontal>
         <template v-else-if="item.code != null">
-          <div class="q-my-lg q-mx-sm" :key="'plus_' + index">
+          <div class="q-pa-lg flex column" :key="'plus_' + index">
             <q-btn
               push
               no-wrap
-              label="Var"
+              label="Array"
               icon="add"
               @click="
                 () => {
                   insertVar({ index });
+                }
+              "
+            />
+            <q-btn
+              class="q-mt-sm"
+              push
+              no-wrap
+              label="Object"
+              icon="add"
+              @click="
+                () => {
+                  insertVar({ index, type: 'object' });
                 }
               "
             />
@@ -68,6 +88,18 @@
           @click="
             () => {
               insertVar({});
+            }
+          "
+        />
+        <q-btn
+          class="q-mt-sm"
+          push
+          no-wrap
+          label="Object"
+          icon="add"
+          @click="
+            () => {
+              insertVar({ type: 'object' });
             }
           "
         />
@@ -137,6 +169,7 @@ export default {
   components: {
     ToolBar: () => import("components/Toolbar"),
     ValueCard: () => import("components/ValueCard"),
+    ObjectCard: () => import("components/ObjectCard"),
     CodeCard: () => import("components/CodeCard"),
     PromptDialog: () => import("components/PromptDialog"),
     ResizableHorizontal: () => import("components/ResizableHorizontal")
@@ -319,12 +352,13 @@ export default {
         timeout: 2000
       });
     },
-    insertVar({ index, val }) {
+    insertVar({ index, val, type }) {
       index = index === undefined || index === null ? this.core.length : index;
-      val = val ? val : null;
+      type = type ? type : "array";
+      val = val ? val : type == "object" ? {} : null;
 
       const name = alphabet[this.core.filter(item => item.var).length];
-      this.core.splice(index, 0, { var: { name, val, selected: false } });
+      this.core.splice(index, 0, { var: { name, val, type, selected: false } });
     },
     insertCode({ index, code }) {
       index = index === undefined || index === null ? this.core.length : index;
