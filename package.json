@@ -1,8 +1,8 @@
 {
   "name": "adstool",
-  "version": "0.0.1",
-  "description": "Ads Tool app",
-  "productName": "Ads Tool",
+  "version": "0.0.2",
+  "description": "Datatool app",
+  "productName": "Datatool",
   "author": "Semen Ishinov <ectoplazm@gmail.com>",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
     "dexie": "^3.0.3",
     "exceljs": "^4.2.0",
     "file-saver": "^2.0.5",
+    "jsoneditor": "^9.1.7",
     "quasar": "^1.0.0",
     "to": "^0.2.9",
     "update": "^0.7.4",

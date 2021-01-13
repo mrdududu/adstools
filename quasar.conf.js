@@ -103,9 +103,9 @@ module.exports = function(/* ctx */) {
       workboxPluginMode: "GenerateSW", // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `Ads Tool`,
-        short_name: `Ads Tool`,
-        description: `Ads Tool app`,
+        name: `Datatool`,
+        short_name: `Datatool`,
+        description: `Datatool app`,
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",
