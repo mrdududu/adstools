@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-  props: ["accept"],
+  props: ["accept", "readAs"],
   methods: {
     click() {
       this.fileInput.click();
@@ -23,7 +23,12 @@ export default {
         // console.log("onFileLoad", e.target.result);
         this.$emit("onFileLoad", e.target.result);
       };
-      reader.readAsText(file);
+
+      if ("ArrayBuffer" == this.readAs) {
+        reader.readAsArrayBuffer(file);
+      } else {
+        reader.readAsText(file);
+      }
       // console.log({ file, reader });
     };
 

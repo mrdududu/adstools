@@ -30,6 +30,14 @@
                     >Load JSON</q-item-section-file
                   >
                 </q-item>
+                <q-item clickable>
+                  <q-item-section-file
+                    accept=".xlsx"
+                    @onFileLoad="excelLoaded"
+                    readAs="ArrayBuffer"
+                    >Load Excel</q-item-section-file
+                  >
+                </q-item>
                 <q-separator />
                 <q-item clickable v-close-popup>
                   <q-item-section @click="$emit('deleteValue', index)"
@@ -37,9 +45,6 @@
                   >
                 </q-item>
                 <!-- <q-item clickable>
-                  <q-item-section>Load Excel</q-item-section>
-                </q-item>
-                <q-item clickable>
                   <q-item-section>Load CSV</q-item-section>
                 </q-item> -->
               </q-list>
@@ -62,6 +67,7 @@
 </template>
 <script>
 import { saveAs } from "file-saver";
+import Excel from "exceljs/dist/es5/exceljs.browser.js";
 
 const textToVal = text => {
   if (!text) return null;
@@ -114,6 +120,41 @@ export default {
         const data = JSON.parse(fileData);
         this.value.val = data;
       } catch (err) {}
+    },
+    async excelLoaded(fileData) {
+      this.showMenu = false;
+      // console.log({ fileData });
+
+      const workbook = new Excel.Workbook();
+      await workbook.xlsx.load(fileData);
+
+      const worksheet = workbook.worksheets[0];
+      let colNames = [];
+      const excelData = [];
+
+      worksheet.eachRow({ includeEmpty: false }, (row, rowNum) => {
+        if (row.values && 1 < row.values.length) {
+          const rowValues = row.values;
+          rowValues.shift(); // Delete null colunm
+          // console.log({ rowValues });
+          if (1 == rowNum) {
+            colNames = rowValues;
+          } else {
+            const obj = {};
+            for (let i = 0; i < rowValues.length; i++) {
+              obj[colNames[i]] = rowValues[i];
+            }
+            excelData.push(obj);
+          }
+        }
+
+        // console.log("Row " + rowNum + " = " + JSON.stringify(row.values));
+        // const currRow = worksheet.getRow(rowNum);
+        // console.log({ currRow });
+      });
+
+      // console.log({ colNames, excelData });
+      this.value.val = excelData;
     },
     saveAsJson() {
       this.showMenu = false;
