@@ -38,6 +38,11 @@
                     >Load Excel</q-item-section-file
                   >
                 </q-item>
+                <q-item clickable>
+                  <q-item-section-file accept=".csv" @onFileLoad="csvLoaded"
+                    >Load CSV</q-item-section-file
+                  >
+                </q-item>
                 <q-separator />
                 <q-item clickable v-close-popup>
                   <q-item-section @click="$emit('deleteValue', index)"
@@ -68,6 +73,7 @@
 <script>
 import { saveAs } from "file-saver";
 import Excel from "exceljs/dist/es5/exceljs.browser.js";
+import { ExcelToObject, CSVToObject } from "../misc/helper";
 
 const textToVal = text => {
   if (!text) return null;
@@ -123,38 +129,13 @@ export default {
     },
     async excelLoaded(fileData) {
       this.showMenu = false;
-      // console.log({ fileData });
-
-      const workbook = new Excel.Workbook();
-      await workbook.xlsx.load(fileData);
-
-      const worksheet = workbook.worksheets[0];
-      let colNames = [];
-      const excelData = [];
-
-      worksheet.eachRow({ includeEmpty: false }, (row, rowNum) => {
-        if (row.values && 1 < row.values.length) {
-          const rowValues = row.values;
-          rowValues.shift(); // Delete null colunm
-          // console.log({ rowValues });
-          if (1 == rowNum) {
-            colNames = rowValues;
-          } else {
-            const obj = {};
-            for (let i = 0; i < rowValues.length; i++) {
-              obj[colNames[i]] = rowValues[i];
-            }
-            excelData.push(obj);
-          }
-        }
-
-        // console.log("Row " + rowNum + " = " + JSON.stringify(row.values));
-        // const currRow = worksheet.getRow(rowNum);
-        // console.log({ currRow });
-      });
-
-      // console.log({ colNames, excelData });
+      const excelData = await ExcelToObject(fileData);
       this.value.val = excelData;
+    },
+    async csvLoaded(fileData) {
+      this.showMenu = false;
+      const csvData = await CSVToObject(fileData);
+      this.value.val = csvData;
     },
     saveAsJson() {
       this.showMenu = false;

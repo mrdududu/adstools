@@ -133,7 +133,7 @@ import SaveDataClass from "../misc/SaveData";
 import initialCore from "../misc/initial_core.json";
 import presetsJson from "../misc/presets.json";
 import { presets } from "app/babel.config";
-const alphabet = "abcdefghijklmnopqrstuvwxyz";
+import { alphabet } from "../misc/helper";
 // console.log({ initialCore });
 
 const wpSaves = new SaveDataClass("wp_saves");
