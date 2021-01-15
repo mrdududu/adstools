@@ -73,4 +73,14 @@ async function CSVToObject(csvText) {
   return excelData;
 }
 
-export { alphabet, ExcelToObject, CSVToObject };
+const ArrayOfObjectsToObjectOfArrays = arr =>
+  arr.reduce((prevVal, curVal) => {
+    const propNames = Object.getOwnPropertyNames(curVal);
+    for (const propName of propNames) {
+      if (!prevVal[propName]) prevVal[propName] = [];
+      prevVal[propName].push(curVal[propName]);
+    }
+    return prevVal;
+  }, {});
+
+export { alphabet, ExcelToObject, CSVToObject, ArrayOfObjectsToObjectOfArrays };

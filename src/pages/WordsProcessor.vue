@@ -13,8 +13,10 @@
         @clickSaveAsJson="onClick_SaveAsJson"
         @clickLoadSave="onClick_LoadSave"
         @clickDeleteSave="onClick_DeleteSave"
-        @loadedInputFileJson="onLoaded_InputFileJson"
         @selectedPreset="onSelected_Preset"
+        @onJsonLoad="onJsonLoad"
+        @onExcelLoad="onExcelLoad"
+        @onCSVLoad="onCSVLoad"
       />
     </div>
     <div class="flex no-wrap content-block">
@@ -133,7 +135,12 @@ import SaveDataClass from "../misc/SaveData";
 import initialCore from "../misc/initial_core.json";
 import presetsJson from "../misc/presets.json";
 import { presets } from "app/babel.config";
-import { alphabet } from "../misc/helper";
+import {
+  alphabet,
+  ExcelToObject,
+  CSVToObject,
+  ArrayOfObjectsToObjectOfArrays
+} from "../misc/helper";
 // console.log({ initialCore });
 
 const wpSaves = new SaveDataClass("wp_saves");
@@ -324,10 +331,30 @@ export default {
       const blob = new Blob([json], { type: "application/json" });
       saveAs(blob, `${getFilename()}.json`);
     },
-    onLoaded_InputFileJson(json) {
+    onJsonLoad(json) {
       const oJson = JSON.parse(json);
       this.core = oJson;
       this.loadedSaveId = null;
+    },
+    async onExcelLoad(excelBinary) {
+      //ToDo Делать тут
+      const arrayOfObjects = await ExcelToObject(excelBinary);
+      this.loadArrayOfObjects(arrayOfObjects);
+    },
+    async onCSVLoad(csvText) {
+      const arrayOfObjects = await CSVToObject(csvText);
+      this.loadArrayOfObjects(arrayOfObjects);
+    },
+    loadArrayOfObjects(arrayOfObjects) {
+      const objs = ArrayOfObjectsToObjectOfArrays(arrayOfObjects);
+      const varNames = Object.getOwnPropertyNames(objs);
+      this.core = [];
+      for (const name of varNames) {
+        const val = objs[name].map(item => (item ? item : ""));
+        this.insertVar({ name, val });
+      }
+
+      this.insertCode({ code: "" });
     },
     async onClick_LoadSave(id) {
       console.log("onClick_LoadSave", { id });
@@ -352,12 +379,12 @@ export default {
         timeout: 2000
       });
     },
-    insertVar({ index, val, type }) {
+    insertVar({ index, val, type, name }) {
       index = index === undefined || index === null ? this.core.length : index;
       type = type ? type : "array";
       val = val ? val : type == "object" ? {} : null;
 
-      const name = alphabet[this.core.filter(item => item.var).length];
+      name = name ? name : alphabet[this.core.filter(item => item.var).length];
       this.core.splice(index, 0, { var: { name, val, type, selected: false } });
     },
     insertCode({ index, code }) {

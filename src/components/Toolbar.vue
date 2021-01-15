@@ -40,14 +40,28 @@
         </q-item>
       </q-list>
     </q-btn-dropdown>
-    <q-btn flat label="Load JSON" @click="$refs.inputFileJson.click()" />
-    <input
-      style="display: none;"
-      ref="inputFileJson"
-      type="file"
-      accept=".json"
-      @change="onChangeInputFileJson"
-    />
+    <q-btn-dropdown v-model="showLoadMenu" flat label="Load file">
+      <q-list>
+        <q-item clickable>
+          <q-item-section-file accept=".json" @onFileLoad="onJsonLoad"
+            >JSON</q-item-section-file
+          >
+        </q-item>
+        <q-item clickable>
+          <q-item-section-file
+            accept=".xlsx"
+            readAs="ArrayBuffer"
+            @onFileLoad="onExcelLoad"
+            >Excel</q-item-section-file
+          >
+        </q-item>
+        <q-item clickable>
+          <q-item-section-file accept=".csv" @onFileLoad="onCSVLoad"
+            >CSV</q-item-section-file
+          >
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
     <q-separator vertical inset />
     <q-btn-dropdown flat label="Select preset">
       <q-list>
@@ -83,8 +97,15 @@
   </q-toolbar>
 </template>
 <script>
+import qItemSectionFile from "./q-item-section-file.vue";
 export default {
+  components: { qItemSectionFile },
   props: ["savesList", "selectedSaveId", "presets"],
+  data() {
+    return {
+      showLoadMenu: false
+    };
+  },
   computed: {
     ddSavesList() {
       return this.savesList.filter(item => item.id != this.selectedSaveId);
@@ -98,12 +119,17 @@ export default {
       // console.log("clickLoadSave", { id });
       this.$emit("clickLoadSave", id);
     },
-    onChangeInputFileJson(event) {
-      // console.log("onChangeInputFileJson", event);
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = e => this.$emit("loadedInputFileJson", e.target.result);
-      reader.readAsText(file);
+    onJsonLoad(data) {
+      this.showLoadMenu = false;
+      this.$emit("onJsonLoad", data);
+    },
+    onExcelLoad(data) {
+      this.showLoadMenu = false;
+      this.$emit("onExcelLoad", data);
+    },
+    onCSVLoad(data) {
+      this.showLoadMenu = false;
+      this.$emit("onCSVLoad", data);
     }
   }
 };
