@@ -85,7 +85,7 @@
         <q-btn
           push
           no-wrap
-          label="Var"
+          label="Array"
           icon="add"
           @click="
             () => {
